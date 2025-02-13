@@ -17,7 +17,7 @@ set(CMAKE_CXX_STANDARD 17)
 pico_sdk_init()
 
 add_executable(${PROJECT_NAME}
-    client.c
+    src/client.c
 )
 target_compile_definitions(${PROJECT_NAME} PRIVATE
     WIFI_SSID=\"$ENV{WIFI_SSID}\"
@@ -29,6 +29,7 @@ message(wifi: $ENV{WIFI_SSID})
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}
+    ${CMAKE_CURRENT_LIST_DIR}/include
     ${CMAKE_CURRENT_LIST_DIR}/..
 )
 target_link_libraries(${PROJECT_NAME}
