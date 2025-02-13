@@ -9,17 +9,18 @@
 #include "lwip/ip4_addr.h"  
   
 // === Configuration ===  
-  
-// Replace these with your Wi-Fi credentials  
-// #define WIFI_SSID       "YOUR_WIFI_SSID"  
-// #define WIFI_PASSWORD   "YOUR_WIFI_PASSWORD"  
-  
-// Define the TCP server IP and port  
-#define SERVER_IP       "192.168.1.173"  // Replace with your server's IP address  
+
+#ifndef WIFI_SSID
+#error "WIFI_SSID is not defined"
+#endif
+#ifndef WIFI_PASSWORD
+#error "WIFI_PASSWORD is not defined"
+#endif
+#ifndef TCP_SERVER_IP
+#error "TCP_SERVER_IP is not defined"
+#endif
+
 #define SERVER_PORT     8080
-  
-// Message to send  
-#define MESSAGE         "Hello, World!"  
   
 // === TCP Client State Structure ===  
 typedef struct {  
@@ -52,9 +53,10 @@ static err_t tcp_connected_callback(void *arg, struct tcp_pcb *tpcb, err_t err) 
     }  
   
     printf("Connected to server.\n");  
-  
+    
+    const char* message = "Hello, World!\n";
     // Send the "Hello, World!" message  
-    err_t write_err = tcp_write(tpcb, MESSAGE, strlen(MESSAGE), TCP_WRITE_FLAG_COPY);  
+    err_t write_err = tcp_write(tpcb, message, strlen(message), TCP_WRITE_FLAG_COPY);  
     if (write_err != ERR_OK) {  
         printf("Failed to send message: %d\n", write_err);  
         tcp_close(tpcb);  
@@ -88,7 +90,7 @@ static void start_tcp_client(tcp_client_state_t *state) {
     }  
   
     // Set the server IP address  
-    ip4addr_aton(SERVER_IP, &state->server_addr);  
+    ip4addr_aton(TCP_SERVER_IP, &state->server_addr);  
   
     // Assign callbacks  
     tcp_arg(state->pcb, state);  
